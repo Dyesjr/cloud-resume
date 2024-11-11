@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  # 1. Define the DynamoDB table for visitor counts
+  VisitorCountTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: VisitorCountTable  # Name of your table
+      AttributeDefinitions:
+        - AttributeName: visitor_id
+          AttributeType: S  # String type for the primary key
+      KeySchema:
+        - AttributeName: visitor_id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST  # Automatically scales based on demand
+
+  # 2. Define the Lambda function to update the visitor count
+  VisitorCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler  # Replace with your actual handler file path
+      Runtime: python3.9  # Ensure this matches the runtime your code is written in
+      CodeUri: .  # Path to the Lambda function code (typically the root folder or src folder)
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref VisitorCountTable  # Links Lambda to your DynamoDB table
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref VisitorCountTable  # Gives Lambda permissions to read/write to the DynamoDB table
+
+  # 3. Define the API Gateway endpoint for Lambda
+  VisitorCounterApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          title: Visitor Counter API
+          version: 1.0
+        paths:
+          /visitorCount:
+            get:
+              x-amazon-apigateway-integration:
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${VisitorCounterFunction.Arn}/invocations"
+                httpMethod: POST
+                type: aws_proxy
+    DependsOn: VisitorCounterFunction  # Ensures the API deploys after Lambda is created
