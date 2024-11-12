@@ -206,7 +206,7 @@
    */
 
   async function updateVisitorCount() {
-    const apiUrl = "https://xuvvl9fhek.execute-api.us-east-1.amazonaws.com/deployment1"; // Replace with your API Gateway endpoint URL
+    const apiUrl = "https://xuvvl9fhek.execute-api.us-east-1.amazonaws.com/prod1"; // Replace with your API Gateway endpoint URL
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
