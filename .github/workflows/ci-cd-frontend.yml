@@ -22,8 +22,8 @@ jobs:
 
       - name: Sync files to S3
         run: |
-          aws s3 sync ./ s3://your-s3-bucket-name --delete
+          aws s3 sync ./ s3://trialforportfolio --delete
 
       - name: Invalidate CloudFront Cache
         run: |
-          aws cloudfront create-invalidation --distribution-id YOUR_CLOUDFRONT_ID --paths "/*"
+          aws cloudfront create-invalidation --distribution-id E2E45ELMD2GERG --paths "/*"
