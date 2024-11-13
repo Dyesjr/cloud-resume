@@ -143,5 +143,7 @@ This guide walks you through deploying a serverless cloud resume website on AWS,
 
 12. **🔗 Resources:**
    - AWS Cloud Practitioner Certification
+   - AWS Solutions Architect Associate Certification
+   - Programming concepts
    - Serverless Application Model (SAM) CLI Documentation
    - GitHub Actions Documentation
